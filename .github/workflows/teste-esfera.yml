@@ -1,0 +1,35 @@
+name: Teste viabilidade Esfera
+
+on:
+  workflow_dispatch:   # roda so quando voce clicar em "Run workflow"
+
+jobs:
+  teste:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Baixar o codigo
+        uses: actions/checkout@v4
+
+      - name: Instalar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Instalar Google Chrome
+        uses: browser-actions/setup-chrome@v1
+        with:
+          chrome-version: stable
+
+      - name: Instalar Selenium
+        run: pip install selenium
+
+      - name: Rodar o teste
+        run: python teste_esfera.py
+
+      - name: Subir os prints (mesmo se falhar)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: prints-esfera
+          path: print_*.png
+          if-no-files-found: ignore
